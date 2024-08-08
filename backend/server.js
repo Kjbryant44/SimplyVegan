@@ -1,7 +1,12 @@
+//Existing dependencies import
 const express = require('express');
 const dotenv = require('dotenv');
 const connectDB = require('./config/db');
 const recipeRoutes = require('./routes/recipeRoutes');
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
+const bcrypt = require('bcryptjs');
+const User = require('./models/User');  // change this path to actual user model path
 
 dotenv.config();
 
@@ -11,25 +16,58 @@ app.use(express.json());
 
 app.use('/api/recipes', recipeRoutes);
 
-let PORT = process.env.PORT || 5000;
+//Passport.js Configuration
+app.use(passport.initialize());
+app.use(passport.session());
 
-const startServer = async () => {  // Mark the function as async
-  try {
-    await connectDB();  // Use await here
-    console.log('DB Connected');
-
-    app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`);
-    }).on('error', (e) => {
-      if (e.code === 'EADDRINUSE') {
-        console.log(`Address in use, retrying on port ${++PORT}`);
-        startServer();
+passport.use(
+  new LocalStrategy(function(username, password, done) {
+    User.findOne({ username: username }, function (err, user) {
+      if (err) { return done(err); }
+      if (!user) {
+        return done(null, false, { message: 'Incorrect username.' });
       }
+      bcrypt.compare(password, user.password, function(err, result) {
+        if (result) {
+          return done(null, user);
+        } else {
+         return done(null, false, { message: 'Incorrect password.' });
+        }
+      });
     });
+  })
+);
 
-  } catch(error) {
-    console.error(`DB Connection Error: ${error.message}`);
+passport.serializeUser(function(user, done) {
+  done(null, user.id);
+});
+
+passport.deserializeUser(function(id, done) {
+  User.findById(id, function(err, user) {
+    done(err, user);
+  });
+});
+
+//Existing application setup
+let PORT = process.env.PORT || 3000;
+
+const startServer = async () => {
+  try {
+    await connectDB();
+    app.listen(PORT, () => console.log(`The server is running on port ${PORT}`));
+  } catch (error) {
+    console.error(`Error occurred while starting the server: ${error.message}`);
   }
 };
 
-startServer().catch(error => console.error(`Error starting server: ${error.message}`));
+startServer().catch();
+
+// Existing middleware setup
+app.use((req, res) => {
+  res.status(404).json({ message: "Page not found" });
+});
+
+app.use((err, req, res) => {
+  console.error('An unexpected error occurred: ', err);
+  res.status(500).send('An unexpected error occurred on the server');
+});

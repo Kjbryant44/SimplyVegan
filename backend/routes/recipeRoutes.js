@@ -17,6 +17,7 @@ router.get('/fetch', async (req, res) => {
         const query = req.query.query || 'vegan';
         const url = `https://api.spoonacular.com/recipes/complexSearch?apiKey=${apiKey}&query=${query}&diet=vegan`;
         const response = await axios.get(url);
+        console.log('API response: ', response.data);  // Add this line
         const recipes = response.data.results;
 
         for (const item of recipes) {
