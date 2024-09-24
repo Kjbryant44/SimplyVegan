@@ -1,102 +1,113 @@
-const session = require('express-session');
 const express = require('express');
+const session = require('express-session');
 const dotenv = require('dotenv');
 const connectDB = require('./config/db');
 const recipeRoutes = require('./routes/recipeRoutes');
+const userRoutes = require('./routes/userRoutes'); // Added: Import user routes
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const bcrypt = require('bcryptjs');
-const User = require('./models/User');  // change this path to actual user model path
-
+const User = require('./models/User');
+const cors = require('cors');
+const favoriteRoutes = require('./routes/favoriteRoutes');
 
 dotenv.config();
 
 const app = express();
 
+// Updated: CORS configuration to allow credentials and specify origin
+app.use(cors({
+  origin: 'http://localhost:3001',
+  credentials: true
+}));
+console.log('CORS configured for origin:', 'http://localhost:3001');
+
 app.use(express.json());
 
+connectDB()
+  .then(() => {
+    console.log("Database connected successfully");
+  })
+  .catch(err => {
+    console.error("There was an error connecting to the database", err);
+  });
+
+// Updated: Session configuration
+if (!process.env.SESSION_SECRET) {
+  console.error('SESSION_SECRET is not set in the environment variables');
+  process.exit(1);
+}
 app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
-  saveUninitialized: true,
-  cookie: { secure: true }
+  saveUninitialized: false,
+  cookie: {
+    secure: process.env.NODE_ENV === 'production',
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+  }
 }));
 
-app.use('/api/recipes', recipeRoutes);
-
-//Passport.js Configuration
 app.use(passport.initialize());
 app.use(passport.session());
 
-passport.use(
-  new LocalStrategy(function(username, password, done) {
-    User.findOne({ username: username }, function (err, user) {
-      if (err) { return done(err); }
-      if (!user) {
-        return done(null, false, { message: 'Incorrect username.' });
-      }
-      bcrypt.compare(password, user.password, function(err, result) {
-        if (result) {
-          return done(null, user);
-        } else {
-         return done(null, false, { message: 'Incorrect password.' });
-        }
-      });
-    });
-  })
-);
+//  Passport Local Strategy configuration
+passport.use(new LocalStrategy(async (username, password, done) => {
+  try {
+    const user = await User.findOne({ username: username });
+    if (!user) {
+      return done(null, false, { message: 'Incorrect username.' });
+    }
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (isMatch) {
+      return done(null, user);
+    } else {
+      return done(null, false, { message: 'Incorrect password.' });
+    }
+  } catch (err) {
+    return done(err);
+  }
+}));
 
-passport.serializeUser(function(user, done) {
+// Updated: Passport serialization and deserialization
+passport.serializeUser((user, done) => {
   done(null, user.id);
 });
 
-passport.deserializeUser(function(id, done) {
-  User.findById(id, function(err, user) {
-    done(err, user);
-  });
-});
-// Register route
-app.post('/register', async (req, res) => {
+passport.deserializeUser(async (id, done) => {
   try {
-    const { username, password } = req.body;
-    const user = new User({
-      username,
-      password,
-    });
-
-    await user.save();
-
-    res.status(201).json({ message: 'User created successfully' });
-  } catch (error) {
-    res.status(500).json({ message: 'An error occurred while creating the user' });
+    const user = await User.findById(id);
+    done(null, user);
+  } catch (err) {
+    done(err);
   }
 });
-// Login route
-app.post('/login',
-  passport.authenticate('local', { failureRedirect: '/login' }),
-  function(req, res) {
-    res.redirect('/');
-});
-//Existing application setup
-let PORT = process.env.PORT || 3000;
 
-const startServer = async () => {
-  try {
-    await connectDB();
-    app.listen(PORT, () => console.log(`The server is running on port ${PORT}`));
-  } catch (error) {
-    console.error(`Error occurred while starting the server: ${error.message}`);
+app.use('/api/recipes', recipeRoutes);
+app.use('/api/users', userRoutes); 
+app.use('/api/favorites', favoriteRoutes);
+
+// Example route
+app.get('/', (req, res) => {
+  if (!req.session.views) {
+    req.session.views = 1;
+  } else {
+    req.session.views++;
   }
-};
+  res.send(`You have visited this page ${req.session.views} times.`);
+});
 
-startServer().catch();
-
-// Existing middleware setup
+// Middleware for 404 - Not Found
 app.use((req, res) => {
   res.status(404).json({ message: "Page not found" });
 });
 
-app.use((err, req, res) => {
-  console.error('An unexpected error occurred: ', err);
-  res.status(500).send('An unexpected error occurred on the server');
+// Global error handler
+app.use((err, req, res, next) => {
+  console.error('An unexpected error occurred:', err);
+  res.status(500).json({ message: 'An unexpected error occurred on the server', error: err.message });
 });
+
+// Start server
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => console.log(`The server is running on port ${PORT}`));
