@@ -1,10 +1,23 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-const RecipeItem = ({ recipe, isFavorite, onAddToFavorites }) => {
+const RecipeItem = ({ recipe, isFavorite, onAddToFavorites, onRemoveFromFavorites, showRemoveButton }) => {
+  const [showDetails, setShowDetails] = useState(false);
+
   const handleFavoriteClick = () => {
-    if (!isFavorite) {
-      onAddToFavorites(recipe.id || recipe._id);
+    console.log('Favorite button clicked', recipe.id, isFavorite);
+    if (isFavorite && showRemoveButton) {
+      console.log('Removing from favorites');
+      onRemoveFromFavorites(recipe.id);
+    } else if (!isFavorite) {
+      console.log('Adding to favorites');
+      onAddToFavorites(recipe.id);
+    } else {
+      console.log('Button clicked but no action taken');
     }
+  };
+
+  const toggleDetails = () => {
+    setShowDetails(!showDetails);
   };
 
   return (
@@ -14,11 +27,28 @@ const RecipeItem = ({ recipe, isFavorite, onAddToFavorites }) => {
         <h5 className="card-title">{recipe.title}</h5>
         <button
           onClick={handleFavoriteClick}
-          className={`btn ${isFavorite ? 'btn-success' : 'btn-primary'}`}
-          disabled={isFavorite}
+          className={`btn ${isFavorite ? 'btn-success' : 'btn-primary'} mr-2`}
+          disabled={isFavorite && !showRemoveButton}
         >
-          {isFavorite ? 'Added to Favorites' : 'Add to Favorites'}
+          {isFavorite
+            ? (showRemoveButton ? 'Remove from Favorites' : 'Added to Favorites')
+            : 'Add to Favorites'}
         </button>
+        <button onClick={toggleDetails} className="btn btn-info">
+          {showDetails ? 'Hide Details' : 'Show Details'}
+        </button>
+        {showDetails && (
+          <div className="mt-3">
+            <h6>Ingredients:</h6>
+            <ul>
+              {recipe.ingredients.map((ingredient, index) => (
+                <li key={index}>{ingredient}</li>
+              ))}
+            </ul>
+            <h6>Instructions:</h6>
+            <p>{recipe.instructions}</p>
+          </div>
+        )}
       </div>
     </div>
   );

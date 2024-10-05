@@ -1,23 +1,20 @@
 import React from 'react';
 import RecipeItem from './RecipeItem';
 
-const RecipeList = ({ recipes, loading, error, onAddToFavorites, favorites }) => {
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div style={{ color: 'red' }}>{error}</div>;
-  }
+const RecipeList = ({ recipes, loading, error, onAddToFavorites, onRemoveFromFavorites }) => {
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>{error}</p>;
 
   return (
     <div className="row">
-      {recipes.map((recipe) => (
-        <div className="col-md-4" key={recipe.id || recipe._id}>
+      {recipes.map(recipe => (
+        <div key={recipe.id} className="col-md-4 mb-4">
           <RecipeItem
             recipe={recipe}
-            isFavorite={favorites.some(fav => (fav.id || fav._id) === (recipe.id || recipe._id))}
+            isFavorite={recipe.isFavorite}
             onAddToFavorites={onAddToFavorites}
+            onRemoveFromFavorites={onRemoveFromFavorites}
+            showRemoveButton={false}
           />
         </div>
       ))}
