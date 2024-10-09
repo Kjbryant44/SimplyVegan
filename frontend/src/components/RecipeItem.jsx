@@ -1,18 +1,13 @@
 import React, { useState } from 'react';
 
-const RecipeItem = ({ recipe, isFavorite, onAddToFavorites, onRemoveFromFavorites, showRemoveButton }) => {
+const RecipeItem = ({ recipe, onAddToFavorites, onRemoveFromFavorites, showRemoveButton }) => {
   const [showDetails, setShowDetails] = useState(false);
 
   const handleFavoriteClick = () => {
-    console.log('Favorite button clicked', recipe.id, isFavorite);
-    if (isFavorite && showRemoveButton) {
-      console.log('Removing from favorites');
+    if (recipe.isFavorite) {
       onRemoveFromFavorites(recipe.id);
-    } else if (!isFavorite) {
-      console.log('Adding to favorites');
-      onAddToFavorites(recipe.id);
     } else {
-      console.log('Button clicked but no action taken');
+      onAddToFavorites(recipe.id);
     }
   };
 
@@ -27,12 +22,9 @@ const RecipeItem = ({ recipe, isFavorite, onAddToFavorites, onRemoveFromFavorite
         <h5 className="card-title">{recipe.title}</h5>
         <button
           onClick={handleFavoriteClick}
-          className={`btn ${isFavorite ? 'btn-success' : 'btn-primary'} mr-2`}
-          disabled={isFavorite && !showRemoveButton}
+          className={`btn ${recipe.isFavorite ? 'btn-danger' : 'btn-primary'} mr-2`}
         >
-          {isFavorite
-            ? (showRemoveButton ? 'Remove from Favorites' : 'Added to Favorites')
-            : 'Add to Favorites'}
+          {showRemoveButton ? 'Delete' : (recipe.isFavorite ? 'Added to Favorites' : 'Add to Favorites')}
         </button>
         <button onClick={toggleDetails} className="btn btn-info">
           {showDetails ? 'Hide Details' : 'Show Details'}

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import axios from 'axios';
 import Header from './components/Header';
 import RecipeList from './components/RecipeList';
@@ -46,8 +46,19 @@ const App = () => {
   const fetchRecipes = async () => {
     try {
       setLoading(true);
-      const recipesResponse = await axios.get(`${process.env.REACT_APP_API_URL}/api/recipes`);
-      setRecipes(recipesResponse.data);
+      const [recipesResponse, favoritesResponse] = await Promise.all([
+        axios.get(`${process.env.REACT_APP_API_URL}/api/recipes`),
+        axios.get(`${process.env.REACT_APP_API_URL}/api/favorites`, { withCredentials: true })
+      ]);
+
+      const favoriteIds = favoritesResponse.data.map(fav => fav.id);
+      const recipesWithFavorites = recipesResponse.data.map(recipe => ({
+        ...recipe,
+        isFavorite: favoriteIds.includes(recipe.id)
+      }));
+
+      setRecipes(recipesWithFavorites);
+      setFavorites(favoritesResponse.data);
       setLoading(false);
     } catch (error) {
       console.error('Error fetching recipes:', error);
@@ -74,30 +85,25 @@ const App = () => {
       await axios.get(`${process.env.REACT_APP_API_URL}/api/users/logout`, { withCredentials: true });
       setUser(null);
       setFavorites([]);
+      setRecipes(recipes.map(recipe => ({ ...recipe, isFavorite: false })));
     } catch (error) {
       console.error('Error logging out:', error);
     }
   };
 
   const handleAddToFavorites = async (recipeId) => {
-    console.log('handleAddToFavorites called with recipeId:', recipeId);
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/favorites/add`, { recipeId }, { withCredentials: true });
-      console.log('API response:', response.data);
-      const recipe = recipes.find(r => r.id === recipeId);
-      if (recipe) {
-        setFavorites(prev => [...prev, { ...recipe, isFavorite: true }]);
-        setRecipes(prevRecipes => prevRecipes.map(r =>
-          r.id === recipeId ? { ...r, isFavorite: true } : r
-        ));
-      }
+      await axios.post(`${process.env.REACT_APP_API_URL}/api/favorites/add`, { recipeId }, { withCredentials: true });
+      setFavorites(prev => [...prev, recipes.find(r => r.id === recipeId)]);
+      setRecipes(prevRecipes => prevRecipes.map(r =>
+        r.id === recipeId ? { ...r, isFavorite: true } : r
+      ));
     } catch (error) {
       console.error('Error adding to favorites:', error.response?.data || error.message);
     }
   };
 
   const handleRemoveFromFavorites = async (recipeId) => {
-    console.log('handleRemoveFromFavorites called with recipeId:', recipeId);
     try {
       await axios.delete(`${process.env.REACT_APP_API_URL}/api/favorites/remove/${recipeId}`, { withCredentials: true });
       setFavorites(prev => prev.filter(fav => fav.id !== recipeId));
@@ -113,45 +119,46 @@ const App = () => {
     recipe.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  return (
-    <Router>
-      <div>
-        <Header user={user} onLogout={handleLogout} />
-        <div className="container mt-4">
-          {user ? (
-            <Routes>
-              <Route path="/" element={
-                <>
-                  <input
-                    type="text"
-                    className="form-control mb-4"
-                    placeholder="Search recipes..."
-                    value={searchTerm}
-                    onChange={handleSearch}
-                  />
-                  <RecipeList
-                    recipes={filteredRecipes}
-                    loading={loading}
-                    error={error}
-                    onAddToFavorites={handleAddToFavorites}
-                    onRemoveFromFavorites={handleRemoveFromFavorites}
-                  />
-                </>
-              } />
-              <Route path="/favorites" element={
-                <Favorites
-                  favorites={favorites}
+return (
+  <Router>
+    <div>
+      <Header user={user} onLogout={handleLogout} />
+      <div className="container mt-4">
+        {user ? (
+          <Routes>
+            <Route path="/" element={<Navigate to="/recipes" />} />
+            <Route path="/recipes" element={
+              <>
+                <input
+                  type="text"
+                  className="form-control mb-4"
+                  placeholder="Search recipes..."
+                  value={searchTerm}
+                  onChange={handleSearch}
+                />
+                <RecipeList
+                  recipes={filteredRecipes}
+                  loading={loading}
+                  error={error}
+                  onAddToFavorites={handleAddToFavorites}
                   onRemoveFromFavorites={handleRemoveFromFavorites}
                 />
-              } />
-            </Routes>
-          ) : (
-            <Authentication setUser={setUser} />
-          )}
-        </div>
+              </>
+            } />
+            <Route path="/favorites" element={
+              <Favorites
+                favorites={favorites}
+                onRemoveFromFavorites={handleRemoveFromFavorites}
+              />
+            } />
+          </Routes>
+        ) : (
+          <Authentication setUser={setUser} />
+        )}
       </div>
-    </Router>
-  );
+    </div>
+  </Router>
+);
 };
 
 export default App;
