@@ -97,12 +97,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/favorites', favoriteRoutes);
 
 app.get('/', (req, res) => {
-  if (!req.session.views) {
-    req.session.views = 1;
-  } else {
-    req.session.views++;
-  }
-  res.send(`You have visited this page ${req.session.views} times.`);
+  res.send('VG Recipes API is running');
 });
 
 app.use((req, res) => {

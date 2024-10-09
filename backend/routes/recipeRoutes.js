@@ -20,14 +20,40 @@ const mapRecipeData = (recipe) => ({
   instructions: recipe.analyzedInstructions[0]?.steps.map(step => step.step).join('\n') || 'No instructions provided'
 });
 
-// Clear database route (for development and testing only)
-router.get('/clear', async (req, res) => {
+// Route to get a single recipe by ID
+router.get('/:id', async (req, res) => {
   try {
-    await Recipe.deleteMany({});
-    res.json({ message: 'Database cleared' });
+    const recipeId = req.params.id;
+    let recipe = await Recipe.findOne({ spoonacular_id: recipeId });
+
+    if (!recipe) {
+      console.log('Recipe not found in database, fetching from Spoonacular API');
+      const detailedRecipe = await getRecipeDetails(recipeId);
+      const mappedRecipe = mapRecipeData(detailedRecipe);
+
+      recipe = await Recipe.findOneAndUpdate(
+        { spoonacular_id: mappedRecipe.id },
+        {
+          title: mappedRecipe.title,
+          image_url: mappedRecipe.image_url,
+          ingredients: mappedRecipe.ingredients,
+          instructions: mappedRecipe.instructions,
+          spoonacular_id: mappedRecipe.id
+        },
+        { upsert: true, new: true, runValidators: true }
+      );
+    }
+
+    res.json({
+      id: recipe.spoonacular_id,
+      title: recipe.title,
+      image_url: recipe.image_url,
+      ingredients: recipe.ingredients,
+      instructions: recipe.instructions
+    });
   } catch (error) {
-    console.error("Error clearing database:", error);
-    res.status(500).json({ message: error.message });
+    console.error("Error fetching recipe details:", error);
+    res.status(500).json({ message: "Error fetching recipe details", error: error.message });
   }
 });
 
@@ -35,14 +61,14 @@ router.get('/clear', async (req, res) => {
 router.get('/', async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
-    const count = parseInt(req.query.count) || 50;
     const limit = 100;
     const skip = (page - 1) * limit;
 
+    console.log('Fetching recipes from database');
     let recipes = await Recipe.find().skip(skip).limit(limit);
 
     if (recipes.length === 0 && page === 1) {
-      console.log('Fetching recipes from Spoonacular API');
+      console.log('No recipes found in database, fetching from Spoonacular API');
       const spoonacularResponse = await axios.get(`https://api.spoonacular.com/recipes/complexSearch?apiKey=${apiKey}&number=${limit}&offset=${skip}&diet=vegan&addRecipeInformation=true`);
       console.log('Spoonacular API response:', spoonacularResponse.data);
       const basicRecipes = spoonacularResponse.data.results;
@@ -81,11 +107,10 @@ router.get('/', async (req, res) => {
 
     res.json(recipes);
   } catch (error) {
-    console.error("Error fetching recipes:", error.response?.data || error.message);
+    console.error("Error fetching recipes:", error);
+    console.error("Error details:", error.response?.data || error.message);
     res.status(500).json({ message: "Error fetching recipes", error: error.message });
   }
 });
-
-// ... (keep the rest of the routes as they are)
 
 module.exports = router;
