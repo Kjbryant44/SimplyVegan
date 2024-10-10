@@ -4,12 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="52862e8b-78e1-479e-91cc-28777670b39c" name="Changes" comment="updated project">
+    <list default="true" id="52862e8b-78e1-479e-91cc-28777670b39c" name="Changes" comment="installed docker and created containers, also created test files and made some functionality fixes">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/.env" beforeDir="false" afterPath="$PROJECT_DIR$/backend/.env" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/backend/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/backend/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/server.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/server.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -19,9 +16,11 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="JavaScript File" />
-        <option value="HTML File" />
         <option value="package.json" />
+        <option value="HTML File" />
+        <option value="JSX File" />
+        <option value="Dockerfile" />
+        <option value="JavaScript File" />
       </list>
     </option>
   </component>
@@ -53,7 +52,9 @@
   &quot;associatedIndex&quot;: 1
 }</component>
   <component name="ProjectId" id="2jh9pSqIQm2EBBA8B1uVb0F9dHU" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -62,7 +63,9 @@
   &quot;keyToString&quot;: {
     &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
     &quot;Node.js.App.js.executor&quot;: &quot;Run&quot;,
+    &quot;Node.js.Recipe.js.executor&quot;: &quot;Run&quot;,
     &quot;Node.js.index.js.executor&quot;: &quot;Run&quot;,
+    &quot;Node.js.recipeRoutes.js.executor&quot;: &quot;Run&quot;,
     &quot;Node.js.server.js.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
@@ -76,20 +79,23 @@
     &quot;nodejs.jest.jest_package&quot;: &quot;/Users/bryant/Desktop/VGRecipe/node_modules/jest&quot;,
     &quot;nodejs_interpreter_path&quot;: &quot;node&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;npm.build.executor&quot;: &quot;Run&quot;,
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;Docker&quot;,
     &quot;ts.external.directory.path&quot;: &quot;/Applications/PyCharm.app/Contents/plugins/javascript-plugin/jsLanguageServicesImpl/external&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/backend" />
       <recent name="$PROJECT_DIR$/frontend/src" />
+      <recent name="$PROJECT_DIR$/frontend" />
+      <recent name="$PROJECT_DIR$/backend" />
       <recent name="$PROJECT_DIR$/frontend/public" />
     </key>
   </component>
   <component name="RunManager" selected="Node.js.server.js">
-    <configuration name="App.js" type="NodeJSConfigurationType" temporary="true" nameIsGenerated="true" path-to-js-file="$PROJECT_DIR$/frontend/src/App.js" working-dir="$PROJECT_DIR$/frontend/src">
+    <configuration name="App.jsx" type="NodeJSConfigurationType" temporary="true" nameIsGenerated="true" path-to-js-file="$PROJECT_DIR$/frontend/src/App.jsx" working-dir="$PROJECT_DIR$/frontend/src">
       <method v="2" />
     </configuration>
     <configuration name="index.js" type="NodeJSConfigurationType" temporary="true" nameIsGenerated="true" path-to-js-file="$PROJECT_DIR$/frontend/src/index.js" working-dir="$PROJECT_DIR$/frontend/src">
@@ -98,19 +104,30 @@
     <configuration name="server.js" type="NodeJSConfigurationType" temporary="true" nameIsGenerated="true" path-to-js-file="$PROJECT_DIR$/backend/server.js" working-dir="$PROJECT_DIR$/backend">
       <method v="2" />
     </configuration>
+    <configuration name="build" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/frontend/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="build" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Node.js.index.js" />
         <item itemvalue="Node.js.server.js" />
-        <item itemvalue="Node.js.App.js" />
+        <item itemvalue="npm.build" />
+        <item itemvalue="Node.js.index.js" />
+        <item itemvalue="Node.js.App.jsx" />
       </list>
     </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-1d06a55b98c1-0b3e54e931b4-JavaScript-PY-241.18034.82" />
-        <option value="bundled-python-sdk-975db3bf15a3-2767605e8bc2-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-241.18034.82" />
+        <option value="bundled-js-predefined-1d06a55b98c1-0b3e54e931b4-JavaScript-PY-241.19072.16" />
+        <option value="bundled-python-sdk-8336bb23522e-2767605e8bc2-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-241.19072.16" />
       </set>
     </attachedChunks>
   </component>
@@ -134,7 +151,22 @@
       <workItem from="1723075363568" duration="817000" />
       <workItem from="1723076847110" duration="9502000" />
       <workItem from="1723121392151" duration="117000" />
-      <workItem from="1723121517762" duration="1307000" />
+      <workItem from="1723121517762" duration="5366000" />
+      <workItem from="1723200399517" duration="16025000" />
+      <workItem from="1724180814620" duration="4652000" />
+      <workItem from="1724758309782" duration="5001000" />
+      <workItem from="1724854177331" duration="1557000" />
+      <workItem from="1724856740135" duration="10189000" />
+      <workItem from="1725283094515" duration="39000" />
+      <workItem from="1725283142191" duration="4264000" />
+      <workItem from="1725287428361" duration="6848000" />
+      <workItem from="1726149182980" duration="111000" />
+      <workItem from="1726149311796" duration="9991000" />
+      <workItem from="1726829486771" duration="15851000" />
+      <workItem from="1727179809675" duration="2536000" />
+      <workItem from="1727182378341" duration="23115000" />
+      <workItem from="1728152900708" duration="46786000" />
+      <workItem from="1728437916842" duration="2628000" />
     </task>
     <task id="LOCAL-00001" summary="updated project">
       <option name="closed" value="true" />
@@ -144,14 +176,54 @@
       <option name="project" value="LOCAL" />
       <updated>1723118639740</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="commit before npm audit fix-force">
+      <option name="closed" value="true" />
+      <created>1723198434809</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1723198434809</updated>
+    </task>
+    <task id="LOCAL-00003" summary="updated functionality and added user profile creation and log in. Now able to add and delete recipes to your favorite list">
+      <option name="closed" value="true" />
+      <created>1727218838468</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1727218838469</updated>
+    </task>
+    <task id="LOCAL-00004" summary="bug fixes and functional errors">
+      <option name="closed" value="true" />
+      <created>1728164220472</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1728164220472</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="updated project" />
-    <option name="LAST_COMMIT_MESSAGE" value="updated project" />
+    <MESSAGE value="commit before npm audit fix-force" />
+    <MESSAGE value="updated functionality and added user profile creation and log in. Now able to add and delete recipes to your favorite list" />
+    <MESSAGE value="bug fixes and functional errors" />
+    <MESSAGE value="installed docker and created containers" />
+    <MESSAGE value="installed docker and created containers, also created test files and made some functionality fixes" />
+    <option name="LAST_COMMIT_MESSAGE" value="installed docker and created containers, also created test files and made some functionality fixes" />
   </component>
 </project>
