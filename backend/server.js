@@ -9,16 +9,18 @@ const LocalStrategy = require('passport-local').Strategy;
 const User = require('./models/User');
 const cors = require('cors');
 const favoriteRoutes = require('./routes/favoriteRoutes');
+const path = require('path');
 
 dotenv.config();
 
 const app = express();
 
+// CORS configuration
 app.use(cors({
-  origin: 'http://localhost:3001',
+  origin: process.env.NODE_ENV === 'production' ? 'https://your-app-name.herokuapp.com' : 'http://localhost:3001',
   credentials: true
 }));
-console.log('CORS configured for origin:', 'http://localhost:3001');
+console.log('CORS configured for origin:', process.env.NODE_ENV === 'production' ? 'https://your-app-name.herokuapp.com' : 'http://localhost:3001');
 
 app.use(express.json());
 
@@ -84,6 +86,7 @@ passport.deserializeUser(async (id, done) => {
   }
 });
 
+// API routes
 app.get('/api/check-auth', (req, res) => {
   if (req.isAuthenticated()) {
     res.json({ isAuthenticated: true, user: req.user });
@@ -96,10 +99,20 @@ app.use('/api/recipes', recipeRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/favorites', favoriteRoutes);
 
-app.get('/', (req, res) => {
-  res.send('VG Recipes API is running');
-});
+// Serve static files from the React app in production
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '../frontend/build')));
 
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend/build', 'index.html'));
+  });
+} else {
+  app.get('/', (req, res) => {
+    res.send('VG Recipes API is running');
+  });
+}
+
+// Error handling middleware
 app.use((req, res) => {
   res.status(404).json({ message: "Page not found" });
 });
