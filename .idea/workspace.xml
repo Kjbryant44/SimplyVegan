@@ -4,11 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="52862e8b-78e1-479e-91cc-28777670b39c" name="Changes" comment="installed docker and created containers, also created test files and made some functionality fixes">
+    <list default="true" id="52862e8b-78e1-479e-91cc-28777670b39c" name="Changes" comment="deploy to render">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Procfile" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/backend/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/server.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/server.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -202,7 +200,15 @@
       <option name="project" value="LOCAL" />
       <updated>1728164220472</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="deploy to render">
+      <option name="closed" value="true" />
+      <created>1729292516259</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1729292516259</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -226,6 +232,7 @@
     <MESSAGE value="bug fixes and functional errors" />
     <MESSAGE value="installed docker and created containers" />
     <MESSAGE value="installed docker and created containers, also created test files and made some functionality fixes" />
-    <option name="LAST_COMMIT_MESSAGE" value="installed docker and created containers, also created test files and made some functionality fixes" />
+    <MESSAGE value="deploy to render" />
+    <option name="LAST_COMMIT_MESSAGE" value="deploy to render" />
   </component>
 </project>

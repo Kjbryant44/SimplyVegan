@@ -17,10 +17,10 @@ const app = express();
 
 // CORS configuration
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production' ? 'https://your-app-name.herokuapp.com' : 'http://localhost:3001',
+  origin: process.env.NODE_ENV === 'production' ? 'https://simplyvegan.onrender.com' : 'http://localhost:3001',
   credentials: true
 }));
-console.log('CORS configured for origin:', process.env.NODE_ENV === 'production' ? 'https://your-app-name.herokuapp.com' : 'http://localhost:3001');
+console.log('CORS configured for origin:', process.env.NODE_ENV === 'production' ? 'https://simplyvegan.onrender.com' : 'http://localhost:3001')
 
 app.use(express.json());
 
