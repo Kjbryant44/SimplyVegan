@@ -42,12 +42,14 @@ app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
+  store: MongoStore.create({
+    mongoUrl: process.env.MONGODB_URI, // Make sure this environment variable is set in Render
+  }),
   cookie: {
     secure: process.env.NODE_ENV === 'production',
     maxAge: 24 * 60 * 60 * 1000, // 24 hours
     sameSite: 'none'
-  },
-  store: new MongoStore({ mongoUrl: process.env.MONGODB_URI })
+  }
 }));
 
 app.use(passport.initialize());
