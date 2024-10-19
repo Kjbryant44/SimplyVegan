@@ -43,7 +43,7 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   store: MongoStore.create({
-    mongoUrl: process.env.MONGODB_URI, // Make sure this environment variable is set in Render
+    mongoUrl: process.env.MONGODB_URI,
   }),
   cookie: {
     secure: process.env.NODE_ENV === 'production',
