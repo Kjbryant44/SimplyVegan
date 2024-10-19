@@ -37,7 +37,16 @@ if (!process.env.SESSION_SECRET) {
   console.error('SESSION_SECRET is not set in the environment variables');
   process.exit(1);
 }
-
+let sessionStore;
+try {
+  sessionStore = MongoStore.create({
+    mongoUrl: process.env.MONGODB_URI,
+    collectionName: 'sessions'
+  });
+  console.log('MongoStore created successfully');
+} catch (error) {
+  console.error('Error creating MongoStore:', error);
+}
 app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
@@ -48,7 +57,8 @@ app.use(session({
   cookie: {
     secure: process.env.NODE_ENV === 'production',
     maxAge: 24 * 60 * 60 * 1000, // 24 hours
-    sameSite: 'none'
+     sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    httpOnly: true
   }
 }));
 
@@ -56,7 +66,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use((req, res, next) => {
-  console.log('Session:', req.session);
+  console.log('Session ID:', req.sessionID);
+  console.log('Is Authenticated:', req.isAuthenticated());
   console.log('User:', req.user);
   next();
 });
@@ -93,6 +104,8 @@ passport.deserializeUser(async (id, done) => {
 
 // API routes
 app.get('/api/check-auth', (req, res) => {
+  console.log('Checking auth - Session:', req.session);
+  console.log('Checking auth - User:', req.user);
   if (req.isAuthenticated()) {
     res.json({ isAuthenticated: true, user: req.user });
   } else {
