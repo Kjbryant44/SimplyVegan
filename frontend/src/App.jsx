@@ -6,6 +6,8 @@ import RecipeList from './components/RecipeList';
 import Authentication from './components/Authentication';
 import Favorites from './components/Favorites';
 
+axios.defaults.withCredentials = true;
+axios.defaults.baseURL = process.env.REACT_APP_API_URL || 'https://simplyvegan.onrender.com';
 const App = () => {
   const [recipes, setRecipes] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -18,18 +20,19 @@ const App = () => {
     checkCurrentUser().catch(console.error);
   }, []);
 
-  useEffect(() => {
-    if (user) {
-      fetchRecipes().catch(console.error);
-      fetchFavorites().catch(console.error);
-    }
-  }, [user]);
+useEffect(() => {
+  if (user) {
+    fetchRecipes().catch(console.error);
+    fetchFavorites().catch(console.error);
+  } else {
+    setRecipes([]);
+    setFavorites([]);
+  }
+}, [user]);
 
   const checkCurrentUser = async () => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/check-auth`, {
-        withCredentials: true
-      });
+      const response = await axios.get('/api/check-auth');
       if (response.data.isAuthenticated) {
         setUser(response.data.user);
         console.log('Current user:', response.data.user);
@@ -46,10 +49,12 @@ const App = () => {
   const fetchRecipes = async () => {
     try {
       setLoading(true);
-      const [recipesResponse, favoritesResponse] = await Promise.all([
-        axios.get(`${process.env.REACT_APP_API_URL}/api/recipes`),
-        axios.get(`${process.env.REACT_APP_API_URL}/api/favorites`, { withCredentials: true })
-      ]);
+      const recipesResponse = await axios.get('/api/recipes');
+      let favoritesResponse = { data: [] };
+
+      if (user) {
+        favoritesResponse = await axios.get('/api/favorites');
+      }
 
       const favoriteIds = favoritesResponse.data.map(fav => fav.id);
       const recipesWithFavorites = recipesResponse.data.map(recipe => ({
@@ -57,7 +62,7 @@ const App = () => {
         isFavorite: favoriteIds.includes(recipe.id)
       }));
 
-      setRecipes(recipesWithFavorites);
+       setRecipes(recipesWithFavorites);
       setFavorites(favoritesResponse.data);
       setLoading(false);
     } catch (error) {
@@ -69,7 +74,7 @@ const App = () => {
 
   const fetchFavorites = async () => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/favorites`, { withCredentials: true });
+      const response = await axios.get('/api/favorites');
       setFavorites(response.data);
     } catch (error) {
       console.error('Error fetching favorites:', error);
@@ -82,7 +87,7 @@ const App = () => {
 
   const handleLogout = async () => {
     try {
-      await axios.get(`${process.env.REACT_APP_API_URL}/api/users/logout`, { withCredentials: true });
+      await axios.get('/api/users/logout');
       setUser(null);
       setFavorites([]);
       setRecipes(recipes.map(recipe => ({ ...recipe, isFavorite: false })));
@@ -91,9 +96,9 @@ const App = () => {
     }
   };
 
-  const handleAddToFavorites = async (recipeId) => {
+    const handleAddToFavorites = async (recipeId) => {
     try {
-      await axios.post(`${process.env.REACT_APP_API_URL}/api/favorites/add`, { recipeId }, { withCredentials: true });
+      await axios.post('/api/favorites/add', { recipeId });
       setFavorites(prev => [...prev, recipes.find(r => r.id === recipeId)]);
       setRecipes(prevRecipes => prevRecipes.map(r =>
         r.id === recipeId ? { ...r, isFavorite: true } : r
@@ -105,7 +110,7 @@ const App = () => {
 
   const handleRemoveFromFavorites = async (recipeId) => {
     try {
-      await axios.delete(`${process.env.REACT_APP_API_URL}/api/favorites/remove/${recipeId}`, { withCredentials: true });
+      await axios.delete(`/api/favorites/remove/${recipeId}`);
       setFavorites(prev => prev.filter(fav => fav.id !== recipeId));
       setRecipes(prevRecipes => prevRecipes.map(r =>
         r.id === recipeId ? { ...r, isFavorite: false } : r

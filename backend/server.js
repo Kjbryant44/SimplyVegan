@@ -10,6 +10,7 @@ const User = require('./models/User');
 const cors = require('cors');
 const favoriteRoutes = require('./routes/favoriteRoutes');
 const path = require('path');
+const MongoStore = require('connect-mongo');
 
 dotenv.config();
 
@@ -43,8 +44,10 @@ app.use(session({
   saveUninitialized: false,
   cookie: {
     secure: process.env.NODE_ENV === 'production',
-    maxAge: 24 * 60 * 60 * 1000 // 24 hours
-  }
+    maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    sameSite: 'none'
+  },
+  store: new MongoStore({ mongoUrl: process.env.MONGODB_URI })
 }));
 
 app.use(passport.initialize());
