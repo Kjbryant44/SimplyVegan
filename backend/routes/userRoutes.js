@@ -41,8 +41,14 @@ router.post('/login', (req, res, next) => {
         console.error('Login error:', err);
         return next(err);
       }
-      console.log('User logged in:', user);
-      return res.json({ message: 'Logged in successfully', user: { id: user._id, username: user.username } });
+      req.session.save((err) => {
+        if (err) {
+          console.error('Session save error:', err);
+          return next(err);
+        }
+        console.log('User logged in:', user);
+        return res.json({ message: 'Logged in successfully', user: { id: user._id, username: user.username } });
+      });
     });
   })(req, res, next);
 });

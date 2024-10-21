@@ -4,7 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="52862e8b-78e1-479e-91cc-28777670b39c" name="Changes" comment="add logging" />
+    <list default="true" id="52862e8b-78e1-479e-91cc-28777670b39c" name="Changes" comment="Storange changed and bug fixex on maintaining authentication across request">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -245,7 +247,15 @@
       <option name="project" value="LOCAL" />
       <updated>1729300193014</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="Storange changed and bug fixex on maintaining authentication across request">
+      <option name="closed" value="true" />
+      <created>1729300709912</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1729300709912</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -273,6 +283,7 @@
     <MESSAGE value="updated code to run on render not heroku" />
     <MESSAGE value="try to fix the issues of recipes not loading" />
     <MESSAGE value="add logging" />
-    <option name="LAST_COMMIT_MESSAGE" value="add logging" />
+    <MESSAGE value="Storange changed and bug fixex on maintaining authentication across request" />
+    <option name="LAST_COMMIT_MESSAGE" value="Storange changed and bug fixex on maintaining authentication across request" />
   </component>
 </project>
