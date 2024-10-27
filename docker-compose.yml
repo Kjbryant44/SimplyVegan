@@ -8,9 +8,11 @@ services:
     ports:
       - "3001:3001"
     environment:
-      - REACT_APP_API_URL=${RENDER_EXTERNAL_URL}
+      - REACT_APP_API_URL=http://localhost:3000
     depends_on:
       - backend
+    networks:
+      - app-network
 
   backend:
     build:
@@ -19,7 +21,27 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - MONGODB_URI=${MONGODB_URI}
+      - MONGO_URI=mongodb://mongo:27017/veganrecipe
       - SPOONACULAR_API_KEY=${SPOONACULAR_API_KEY}
       - SESSION_SECRET=${SESSION_SECRET}
+    depends_on:
+      - mongo
+    networks:
+      - app-network
+
+  mongo:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - app-network
+
+volumes:
+  mongo-data:
+
+networks:
+  app-network:
+    driver: bridge
 

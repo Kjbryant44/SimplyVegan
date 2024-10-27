@@ -7,7 +7,7 @@ import Authentication from './components/Authentication';
 import Favorites from './components/Favorites';
 
 axios.defaults.withCredentials = true;
-axios.defaults.baseURL = process.env.REACT_APP_API_URL || 'https://simplyvegan-2-0.onrender.com';
+axios.defaults.baseURL = process.env.REACT_APP_API_URL || 'https://simplyvegan.onrender.com';
 const App = () => {
   const [recipes, setRecipes] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
