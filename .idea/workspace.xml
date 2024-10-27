@@ -4,8 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="52862e8b-78e1-479e-91cc-28777670b39c" name="Changes" comment="Storange changed and bug fixex on maintaining authentication across request">
+    <list default="true" id="52862e8b-78e1-479e-91cc-28777670b39c" name="Changes" comment="manually save the session with req.session.save">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/server.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/server.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -166,6 +169,8 @@
       <workItem from="1727182378341" duration="23115000" />
       <workItem from="1728152900708" duration="46786000" />
       <workItem from="1728437916842" duration="9704000" />
+      <workItem from="1729978615085" duration="21000" />
+      <workItem from="1729978778816" duration="2070000" />
     </task>
     <task id="LOCAL-00001" summary="updated project">
       <option name="closed" value="true" />
@@ -255,7 +260,15 @@
       <option name="project" value="LOCAL" />
       <updated>1729300709912</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="manually save the session with req.session.save">
+      <option name="closed" value="true" />
+      <created>1729548864360</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1729548864360</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -284,6 +297,19 @@
     <MESSAGE value="try to fix the issues of recipes not loading" />
     <MESSAGE value="add logging" />
     <MESSAGE value="Storange changed and bug fixex on maintaining authentication across request" />
-    <option name="LAST_COMMIT_MESSAGE" value="Storange changed and bug fixex on maintaining authentication across request" />
+    <MESSAGE value="manually save the session with req.session.save" />
+    <option name="LAST_COMMIT_MESSAGE" value="manually save the session with req.session.save" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/frontend/src/App.jsx</url>
+          <line>14</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
