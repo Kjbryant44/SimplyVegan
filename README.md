@@ -16,8 +16,16 @@ Simply Vegan is a full-stack web application that allows users to discover, sear
 - Database: MongoDB with Mongoose
 - Authentication: Passport.js
 - API: Spoonacular for recipe data
+- Containerization: Docker
 
-## Setup and Installation
+## Setup Using Docker
+1. Ensure Docker and Docker Compose are installed on your system.
+2. Clone the repository: `git clone https://github.com/Kjbryant44/SimplyVegan.git`
+3. Navigate to the project directory: `cd SimplyVegan`
+4. Build and run the Docker containers: `docker-compose up --build`
+5. Open your browser and navigate to `http://localhost:3001`
+
+## Setup and Installation (local)
 1. Clone the repository
    git clone https://github.com/Kjbryant44/SimplyVegan.git
 2. Install dependencies for backend
@@ -41,7 +49,7 @@ npm start
 cd frontend
 npm start
 
-7. Open your browser and navigate to `http://localhost:3001`
+6. Open your browser and navigate to `http://localhost:3001`
 
 ## Usage
 - Register for an account or log in
@@ -50,3 +58,8 @@ npm start
 - Click on a recipe to view details
 - Add recipes to your favorites list
 - View and manage your favorites in the Favorites section
+
+## Docker Configuration
+This project includes a `docker-compose.yml` file for easy containerization and deployment. 
+The file defines services for the frontend, backend, and MongoDB database. To use Docker for development or deployment, 
+refer to the "Using Docker" section in the setup instructions above.
