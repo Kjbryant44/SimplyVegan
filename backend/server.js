@@ -1,3 +1,4 @@
+// Import necessary modules
 const express = require('express');
 const session = require('express-session');
 const dotenv = require('dotenv');
@@ -12,8 +13,10 @@ const favoriteRoutes = require('./routes/favoriteRoutes');
 const path = require('path');
 const MongoStore = require('connect-mongo');
 
+// Load environment variables from .env file
 dotenv.config();
 
+// Initialize Express app
 const app = express();
 
 // CORS configuration
@@ -22,9 +25,10 @@ app.use(cors({
   credentials: true
 }));
 console.log('CORS configured for origin:', process.env.NODE_ENV === 'production' ? 'https://simplyvegan.onrender.com' : 'http://localhost:3001')
-
+// Enable body parser for JSON
 app.use(express.json());
 
+// Connect to MongoDB database
 connectDB()
   .then(() => {
     console.log("Database connected successfully");
@@ -33,10 +37,12 @@ connectDB()
     console.error("There was an error connecting to the database", err);
   });
 
+// Check if SESSION_SECRET environment variable is set
 if (!process.env.SESSION_SECRET) {
   console.error('SESSION_SECRET is not set in the environment variables');
   process.exit(1);
 }
+// Create a MongoDB store for Express sessions
 let sessionStore;
 try {
   sessionStore = MongoStore.create({
@@ -47,6 +53,8 @@ try {
 } catch (error) {
   console.error('Error creating MongoStore:', error);
 }
+
+// Enable session management using Express session
 app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
@@ -62,6 +70,7 @@ app.use(session({
   }
 }));
 
+// Initialize Passport for authentication
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -73,6 +82,7 @@ app.use((req, res, next) => {
   next();
 });
 
+// Use Passport's LocalStrategy for user authentication
 passport.use(new LocalStrategy(async (username, password, done) => {
   try {
     const user = await User.findOne({ username: username });
@@ -90,10 +100,12 @@ passport.use(new LocalStrategy(async (username, password, done) => {
   }
 }));
 
+// Serialize user to store in the session
 passport.serializeUser((user, done) => {
   done(null, user.id);
 });
 
+// Deserialize user from the session
 passport.deserializeUser(async (id, done) => {
   try {
     const user = await User.findById(id);

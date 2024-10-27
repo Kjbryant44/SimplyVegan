@@ -6,9 +6,11 @@ import RecipeList from './components/RecipeList';
 import Authentication from './components/Authentication';
 import Favorites from './components/Favorites';
 
+// Set axios defaults
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = process.env.REACT_APP_API_URL || 'https://simplyvegan.onrender.com';
 const App = () => {
+   //State variables
   const [recipes, setRecipes] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
@@ -16,10 +18,11 @@ const App = () => {
   const [user, setUser] = useState(null);
   const [favorites, setFavorites] = useState([]);
 
+  // Hook to check current user on component load
   useEffect(() => {
     checkCurrentUser().catch(console.error);
   }, []);
-
+// Hook to fetch recipes and favorites whenever the user state changes
 useEffect(() => {
   if (user) {
     fetchRecipes().catch(console.error);
@@ -30,6 +33,7 @@ useEffect(() => {
   }
 }, [user]);
 
+  // Function to check current user
   const checkCurrentUser = async () => {
     try {
       const response = await axios.get('/api/check-auth');
@@ -46,6 +50,7 @@ useEffect(() => {
     }
   };
 
+   // Function to fetch recipes
   const fetchRecipes = async () => {
     try {
       setLoading(true);
@@ -55,7 +60,6 @@ useEffect(() => {
       if (user) {
         favoritesResponse = await axios.get('/api/favorites');
       }
-
       const favoriteIds = favoritesResponse.data.map(fav => fav.id);
       const recipesWithFavorites = recipesResponse.data.map(recipe => ({
         ...recipe,
@@ -72,6 +76,7 @@ useEffect(() => {
     }
   };
 
+  // Function to fetch favorites
   const fetchFavorites = async () => {
     try {
       const response = await axios.get('/api/favorites');
@@ -81,10 +86,12 @@ useEffect(() => {
     }
   };
 
+  // Function to handle search
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
   };
 
+    // Function to handle logout
   const handleLogout = async () => {
     try {
       await axios.get('/api/users/logout');
@@ -96,6 +103,7 @@ useEffect(() => {
     }
   };
 
+   // Function to handle adding to favorites
     const handleAddToFavorites = async (recipeId) => {
     try {
       await axios.post('/api/favorites/add', { recipeId });
@@ -108,6 +116,7 @@ useEffect(() => {
     }
   };
 
+    // Function to handle removing from favorites
   const handleRemoveFromFavorites = async (recipeId) => {
     try {
       await axios.delete(`/api/favorites/remove/${recipeId}`);
@@ -119,7 +128,7 @@ useEffect(() => {
       console.error('Error removing from favorites:', error.response?.data || error.message);
     }
   };
-
+  // Filter recipes based on search term
   const filteredRecipes = recipes.filter((recipe) =>
     recipe.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
